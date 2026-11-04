@@ -83,6 +83,55 @@ Nome e cognome: ________________________________
 """
 
 
+def latex_text(p):
+    return rf"""\documentclass[12pt]{{exam}}
+\usepackage[italian]{{babel}}
+\usepackage{{amsmath,amssymb}}
+\begin{{document}}
+
+\noindent Cognome e Nome: \dotfill\\
+\begin{{center}}
+\textbf{{CALCOLO DELLE PROBABILITÀ -- 15 Settembre 2026 -- MAT-AI}}
+\end{{center}}
+
+Motivare dettagliatamente le risposte.
+
+\begin{{questions}}
+
+\question Rispondere ai seguenti quesiti.
+\begin{{enumerate}}
+\item Sia $X\sim Bin(n={p['n_bin']},p={p['p_bin']})$, calcolare
+\[P(X>2\mid X>1)=\]
+\item Sia $Y\sim H(N={p['N_hyp']},n={p['n_hyp']},K={p['good_hyp']})$,
+calcolare $P(Y=2\mid Y>1)$.
+\item Sia $T\sim Poisson$ con $P(T=0)=1/2$, calcolare $E(T)$ e $P(T=1)$.
+\end{{enumerate}}
+
+\question Da un lotto di ${{{p['total']}}}$ componenti, di cui ${{{p['defective']}}}$ difettosi,
+si effettuano estrazioni con restituzione. L'esperimento viene interrotto la prima volta
+che viene estratto un pezzo difettoso. Indicando con $Z$ il numero di estrazioni,
+calcolare $P(Z>2)$, la probabilità di ottenere per la prima volta un pezzo difettoso
+alla quinta estrazione sapendo che le prime tre sono non difettose, e il minimo $n$
+affinché la probabilità di non estrarre componenti difettosi nelle prime $n$ estrazioni
+sia minore di $1/3$.
+
+\question Un sistema di Intelligenza Artificiale deve stabilire se un messaggio proviene
+da un utente umano ($H$) oppure da un bot ($H^c$). Si ha $P(H)=0.8$ e $P(H^c)=0.2$.
+Si assume che $X\mid H\sim N({p['mu_h']},{p['sigma']}^2)$ e
+$X\mid H^c\sim N({p['mu_b']},{p['sigma']}^2)$. Calcolare $\alpha=P(X>2)$,
+$\beta=P(H\mid X>2)$ e $\gamma=P(H^c\mid X<2)$.
+
+\question Dei messaggi vengono classificati in tre categorie: spam, promozioni e ordinari.
+Per $m={p['m']}$ messaggi, si assumano probabilità
+$P(A_i)={p['pa']}$, $P(B_i)={p['pb']}$, $P(C_i)={p['pc']}$.
+Calcolare $\operatorname{{Cov}}(X,Y)$, $\rho_{{X,Y}}$ e
+$\operatorname{{Cov}}(X,Y+Z)$.
+
+\end{{questions}}
+\end{{document}}
+"""
+
+
 st.title("📘 Generatore di compiti di probabilità")
 st.caption("Prima versione: modifica i parametri e genera una variante del compito.")
 
@@ -115,8 +164,12 @@ if abs(pa + pb + pc - 1) > 1e-9:
 answers = build_exercises(params)
 tab_task, tab_answers = st.tabs(["Testo del compito", "Risultati"])
 with tab_task:
-    st.text_area("Compito generato", exercise_text(params), height=520)
+    st.subheader("Testo del compito")
+    st.text_area("Versione leggibile", exercise_text(params), height=420)
     st.download_button("Scarica testo (.txt)", exercise_text(params), "compito_probabilita.txt", "text/plain")
+    st.subheader("Sorgente LaTeX")
+    st.code(latex_text(params), language="latex")
+    st.download_button("Scarica sorgente LaTeX (.tex)", latex_text(params), "compito_probabilita.tex", "text/plain")
 
 with tab_answers:
     if not show_solutions:

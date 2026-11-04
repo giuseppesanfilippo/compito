@@ -181,7 +181,7 @@ Cov(X,Y+Z)=Cov(X,m-X)=-Var(X)=-mp_A(1-p_A)={a['cov_x_yz']:.6f}.
 
 
 def rendered_preview(p):
-    return f"""### Anteprima compilata
+    return rf"""### Anteprima compilata
 
 **CALCOLO DELLE PROBABILITÀ — 15 Settembre 2026 — MAT-AI**
 

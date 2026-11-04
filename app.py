@@ -180,6 +180,37 @@ Cov(X,Y+Z)=Cov(X,m-X)=-Var(X)=-mp_A(1-p_A)={a['cov_x_yz']:.6f}.
     return text.replace("\\[", "$$").replace("\\]", "$$")
 
 
+def rendered_preview(p):
+    return f"""### Anteprima compilata
+
+**CALCOLO DELLE PROBABILITÀ — 15 Settembre 2026 — MAT-AI**
+
+**1.** Sia $X\sim Bin({p['n_bin']},{p['p_bin']})$. Calcolare:
+
+$$P(X>2\mid X>1)$$
+
+Sia $Y\sim H(N={p['N_hyp']},n={p['n_hyp']},K={p['good_hyp']})$. Calcolare:
+
+$$P(Y=2\mid Y>1)$$
+
+Sia $T\sim Poisson$ con $P(T=0)=1/2$. Calcolare $E(T)$ e $P(T=1)$.
+
+**2.** Da un lotto di ${p['total']}$ componenti, di cui ${p['defective']} difettosi,
+si effettuano estrazioni con restituzione. Calcolare:
+
+$$P(Z>2),\qquad \delta,\qquad n$$
+
+**3.** Con $X\mid H\sim N({p['mu_h']},{p['sigma']}^2)$ e
+$X\mid H^c\sim N({p['mu_b']},{p['sigma']}^2)$, calcolare:
+
+$$\alpha=P(X>2),\qquad \beta=P(H\mid X>2),\qquad \gamma=P(H^c\mid X<2)$$
+
+**4.** Per la distribuzione multinomiale calcolare:
+
+$$\operatorname{{Cov}}(X,Y),\qquad \rho_{{X,Y}},\qquad \operatorname{{Cov}}(X,Y+Z)$$
+"""
+
+
 st.title("📘 Generatore di compiti di probabilità")
 st.caption("Prima versione: modifica i parametri e genera una variante del compito.")
 
@@ -213,6 +244,7 @@ answers = build_exercises(params)
 tab_task, tab_answers = st.tabs(["Testo del compito", "Risultati"])
 with tab_task:
     st.subheader("Testo del compito")
+    st.markdown(rendered_preview(params))
     st.text_area("Versione leggibile", exercise_text(params), height=420)
     st.download_button("Scarica testo (.txt)", exercise_text(params), "compito_probabilita.txt", "text/plain")
     st.subheader("Sorgente LaTeX")

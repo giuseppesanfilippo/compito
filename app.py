@@ -132,6 +132,53 @@ $\operatorname{{Cov}}(X,Y+Z)$.
 """
 
 
+def solution_latex(p, a):
+    return f"""### Soluzioni dettagliate
+
+**1.**
+\[
+P(X>2\mid X>1)=P(X>2)/P(X>1)={fmt(a['bin_answer'])}
+\]
+con $P(X=k)=C({p['n_bin']},k){p['p_bin']}^k(1-{p['p_bin']})^({p['n_bin']}-k)$.
+\[
+P(Y=2\mid Y>1)=P(Y=2)/P(Y>1)={fmt(a['hyp_answer'])}
+\]
+con $P(Y=k)=C({p['good_hyp']},k)C({p['N_hyp']-p['good_hyp']},{p['n_hyp']}-k)/C({p['N_hyp']},{p['n_hyp']})$.
+\[
+e^(-\lambda)=1/2\Rightarrow \lambda=\log 2,\quad E(T)=\log 2,\quad P(T=1)=\lambda e^(-\lambda)=(\log 2)/2.
+\]
+
+**2.** Ponendo $q=({p['total']}-{p['defective']})/{p['total']}$:
+\[
+P(Z>2)=q^2={a['z_gt_2']:.6f},\quad \delta=q(1-q)={a['delta']:.6f}.
+\]
+\[
+q^n<1/3\Rightarrow n>\log(1/3)/\log(q),\quad n={a['min_n']}.
+\]
+
+**3.** Con $\Phi$ funzione di ripartizione della normale standard:
+\[
+\alpha=0.8P(X>2\mid H)+0.2P(X>2\mid H^c)={a['alpha']:.6f}.
+\]
+\[
+\beta=P(H\mid X>2)=0.8P(X>2\mid H)/\alpha={a['beta']:.6f}.
+\]
+\[
+\gamma=P(H^c\mid X<2)=0.2P(X<2\mid H^c)/P(X<2)={a['gamma']:.6f}.
+\]
+
+**4.** Per la multinomiale:
+\[
+Cov(X,Y)=-mp_Ap_B={a['cov_xy']:.6f},\quad
+rho(X,Y)=-sqrt(p_Ap_B/((1-p_A)(1-p_B)))={a['rho_xy']:.6f}.
+\]
+Poiché $Y+Z=m-X$:
+\[
+Cov(X,Y+Z)=Cov(X,m-X)=-Var(X)=-mp_A(1-p_A)={a['cov_x_yz']:.6f}.
+\]
+"""
+
+
 st.title("📘 Generatore di compiti di probabilità")
 st.caption("Prima versione: modifica i parametri e genera una variante del compito.")
 
@@ -182,4 +229,6 @@ with tab_answers:
         st.write(f"2. P(Z>2) = **{fmt(answers['z_gt_2'])}**, δ = **{fmt(answers['delta'])}**, n minimo = **{answers['min_n']}**")
         st.write(f"3. α = **{fmt(answers['alpha'])}**, β = **{fmt(answers['beta'])}**, γ = **{fmt(answers['gamma'])}**")
         st.write(f"4. Cov(X,Y) = **{fmt(answers['cov_xy'])}**, ρ = **{fmt(answers['rho_xy'])}**, Cov(X,Y+Z) = **{fmt(answers['cov_x_yz'])}**")
+        st.subheader("Soluzioni con formule")
+        st.markdown(solution_latex(params, answers))
 

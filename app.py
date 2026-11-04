@@ -211,6 +211,60 @@ $$\operatorname{{Cov}}(X,Y),\qquad \rho_{{X,Y}},\qquad \operatorname{{Cov}}(X,Y+
 """
 
 
+def detailed_preview(p):
+    return rf"""### Testo e svolgimento
+
+**CALCOLO DELLE PROBABILITÀ — 15 Settembre 2026 — MAT-AI**
+
+Motivare dettagliatamente le risposte.
+
+### Esercizio 1
+
+**a) Testo.** Sia $X\sim Bin(n={p['n_bin']},p={p['p_bin']})$, calcolare $P(X>2\mid X>1)$.
+
+**Passaggi:** $$P(X>2\mid X>1)=\frac{{P(X>2)}}{{P(X>1)}}.$$ 
+$$P(X=k)=\binom{{{p['n_bin']}}}k{p['p_bin']}^k(1-{p['p_bin']})^{{{p['n_bin']}-k}}.$$ 
+Si calcolano quindi numeratore e denominatore con la distribuzione binomiale.
+
+**b) Testo.** Sia $Y\sim H(N={p['N_hyp']},n={p['n_hyp']},K={p['good_hyp']})$, calcolare $P(Y=2\mid Y>1)$.
+
+**Passaggi:** $$P(Y=2\mid Y>1)=\frac{{P(Y=2)}}{{P(Y>1)}}.$$ 
+$$P(Y=k)=\frac{{\binom{{{p['good_hyp']}}}k\binom{{{p['N_hyp']-p['good_hyp']}}}{{{p['n_hyp']}-k}}}}{{\binom{{{p['N_hyp']}}}{{{p['n_hyp']}}}}}.$$ 
+Si sostituisce $k=2$ al numeratore e si sommano i casi $k=2,3,\ldots$ al denominatore.
+
+**c) Testo.** Sia $T\sim Poisson$ con $P(T=0)=1/2$, calcolare $E(T)$ e $P(T=1)$.
+
+**Passaggi:** $$P(T=0)=e^{{-\lambda}}=1/2\Rightarrow \lambda=\log 2.$$ 
+$$E(T)=\lambda=\log 2,\qquad P(T=1)=\lambda e^{{-\lambda}}=\frac{{\log 2}}2.$$ 
+
+### Esercizio 2
+
+**Testo.** Da un lotto di ${p['total']} componenti, di cui ${p['defective']} difettosi, si effettuano estrazioni con restituzione. L'esperimento viene interrotto la prima volta che viene estratto un pezzo difettoso. Indicando con $Z$ il numero di estrazioni, calcolare $P(Z>2)$, la probabilità di ottenere per la prima volta un pezzo difettoso alla quinta estrazione sapendo che le prime tre sono non difettose, e il minimo $n$ affinché la probabilità di non estrarre componenti difettosi nelle prime $n$ estrazioni sia minore di $1/3$.
+
+**Passaggi:** $$q=P(\text{{non difettoso}})=\frac{{{p['total']}-{p['defective']}}}{{{p['total']}}}.$$ 
+$$P(Z>2)=q^2.$$ 
+Sapendo che le prime tre sono buone, per avere il primo difettoso alla quinta servono ancora una quarta estrazione buona e una quinta difettosa: $$P=q(1-q).$$ 
+Infine $$P(\text{{nessun difettoso nelle prime }}n)=q^n<1/3\Rightarrow n>\frac{{\log(1/3)}}{{\log q}},$$ quindi il minimo intero è $n={math.floor(math.log(1/3)/math.log(1-p['defective']/p['total']))+1}$.
+
+### Esercizio 3
+
+**Testo.** Un sistema di Intelligenza Artificiale deve stabilire se un messaggio proviene da un utente umano ($H$) oppure da un bot ($H^c$). Si ha $P(H)=0.8$ e $P(H^c)=0.2$. Si assume che $X\mid H\sim N({p['mu_h']},{p['sigma']}^2)$ e $X\mid H^c\sim N({p['mu_b']},{p['sigma']}^2)$. Calcolare $\alpha=P(X>2)$, $\beta=P(H\mid X>2)$ e $\gamma=P(H^c\mid X<2)$.
+
+**Passaggi:** $$\alpha=P(X>2)=0.8P(X>2\mid H)+0.2P(X>2\mid H^c).$$ 
+$$\beta=P(H\mid X>2)=\frac{{0.8P(X>2\mid H)}}{{\alpha}}.$$ 
+$$\gamma=P(H^c\mid X<2)=\frac{{0.2P(X<2\mid H^c)}}{{P(X<2)}}.$$ 
+Le probabilità condizionate si calcolano standardizzando la normale: $P(X>2\mid H)=1-\Phi((2-\mu_H)/\sigma)$.
+
+### Esercizio 4
+
+**Testo.** Dei messaggi vengono classificati in tre categorie: spam, promozioni e ordinari. Per $m={p['m']}$ messaggi, si assumano probabilità $P(A_i)={p['pa']}$, $P(B_i)={p['pb']}$, $P(C_i)={p['pc']}$). Calcolare $\operatorname{{Cov}}(X,Y)$, $\rho_{{X,Y}}$ e $\operatorname{{Cov}}(X,Y+Z)$.
+
+**Passaggi:** per la distribuzione multinomiale, $$\operatorname{{Cov}}(X,Y)=-mp_Ap_B.$$ 
+Le varianze sono $mp_A(1-p_A)$ e $mp_B(1-p_B)$, quindi $$\rho_{{X,Y}}=-\sqrt{{\frac{{p_Ap_B}}{{(1-p_A)(1-p_B)}}}}.$$ 
+Poiché $X+Y+Z=m$, $$Y+Z=m-X\Rightarrow \operatorname{{Cov}}(X,Y+Z)=-\operatorname{{Var}}(X)=-mp_A(1-p_A).$$
+"""
+
+
 st.title("📘 Generatore di compiti di probabilità")
 st.caption("Prima versione: modifica i parametri e genera una variante del compito.")
 
@@ -244,7 +298,7 @@ answers = build_exercises(params)
 tab_task, tab_answers = st.tabs(["Testo del compito", "Risultati"])
 with tab_task:
     st.subheader("Testo del compito")
-    st.markdown(rendered_preview(params))
+    st.markdown(detailed_preview(params))
     st.text_area("Versione leggibile", exercise_text(params), height=420)
     st.download_button("Scarica testo (.txt)", exercise_text(params), "compito_probabilita.txt", "text/plain")
     st.subheader("Sorgente LaTeX")

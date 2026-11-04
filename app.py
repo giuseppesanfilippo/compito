@@ -133,10 +133,10 @@ $\operatorname{{Cov}}(X,Y+Z)$.
 
 
 def solution_latex(p, a):
-    return f"""### Soluzioni dettagliate
+    text = f"""### Soluzioni dettagliate
 
 **1.**
-\[
+$$
 P(X>2\mid X>1)=P(X>2)/P(X>1)={fmt(a['bin_answer'])}
 \]
 con $P(X=k)=C({p['n_bin']},k){p['p_bin']}^k(1-{p['p_bin']})^({p['n_bin']}-k)$.
@@ -177,6 +177,7 @@ Poiché $Y+Z=m-X$:
 Cov(X,Y+Z)=Cov(X,m-X)=-Var(X)=-mp_A(1-p_A)={a['cov_x_yz']:.6f}.
 \]
 """
+    return text.replace("\\[", "$$").replace("\\]", "$$")
 
 
 st.title("📘 Generatore di compiti di probabilità")
